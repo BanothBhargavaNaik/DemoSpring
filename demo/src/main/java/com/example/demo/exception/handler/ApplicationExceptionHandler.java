@@ -29,6 +29,6 @@ public class ApplicationExceptionHandler {
 		ResponseEntity<AppError> re = ResponseEntity.badRequest().body(error);
 		
 		LOGGER.info("Exit From Validation Exception Handel..!");
-		return null;
+		return re;
 	}
 }
