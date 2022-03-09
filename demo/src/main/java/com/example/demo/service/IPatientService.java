@@ -20,7 +20,7 @@ public interface IPatientService {
 	
 
 	
-	public Patient getPatientById(Long id);
+	public Patient getPatientById(Long id) ;
 	
 	List<Patient> getAllPatient();
 	

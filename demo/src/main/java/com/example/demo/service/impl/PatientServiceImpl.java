@@ -1,7 +1,7 @@
 package com.example.demo.service.impl;
 
 import java.util.List;
-
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -73,7 +73,7 @@ public class PatientServiceImpl implements IPatientService {
 	@Override
 	public List<Patient> filtterPatientDetails(String firstName, Long phone) {
 		
-          logger.info("Enter Into Save Patient Impl..!");
+        logger.info("Enter Into Save Patient Impl..!");
 		
 		logger.info("first Name::"+firstName);
 		
@@ -95,11 +95,19 @@ public class PatientServiceImpl implements IPatientService {
 	/* Fetching Patient Data By Using Id */
 
 	@Override
-	public Patient getPatientById(Long id) {
+	public Patient getPatientById(Long id)  {
 		
 		logger.info("Enter Into Get Patient By Id Impl..!");
+		
+		Optional<Patient> pa= patientRepo.findById(id);
+		
+		if(pa.isPresent()) {
+		  return pa.get();
+		}else {
 
-		return patientRepo.findById(id).get();
+			logger.info("Validation Fail, Raising The Exception..!");
+			return null;
+		}
 
 	}
 
