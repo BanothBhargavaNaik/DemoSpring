@@ -8,6 +8,9 @@ import com.example.demo.entity.Patient;
 @Repository
 public interface PatientRepo extends JpaRepository<Patient, Long> {
 	
-	public Patient findByNameAndPhone(String name, Long phone);
+	
+	public Patient findByFirstNameAndPhone(String name, Long phone);
+	
+	public Patient findByFirstName(String name);
 
 }

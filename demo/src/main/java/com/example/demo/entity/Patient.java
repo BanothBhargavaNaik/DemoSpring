@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotBlank;
 
 
 @Entity
@@ -22,20 +23,27 @@ public class Patient {
 	@Column(name= "id")
 	private Long id;
 	
-	@Column(name = "name")
-	private String name;
+	@Column(name = "first_name")
+	@NotBlank(message = "Name is mandatory")
+	private String firstName;
+	
+	@Column(name = "last_name")
+	@NotBlank(message = "Name is mandatory")
+	private String lastName;
 	
 	@Column(name = "dob")
 	@Temporal(TemporalType.DATE)
 	private Date dob;
 	
-	@Column(name = "phone")
-	private Long phone;
-
 	@Override
 	public String toString() {
-		return "Patient [id=" + id + ", name=" + name + ", dob=" + dob + ", phone=" + phone + "]";
+		return "Patient [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", phone="
+				+ phone + "]";
 	}
+
+	@Column(name = "phone")
+	
+	private Long phone;
 
 	public Long getId() {
 		return id;
@@ -45,12 +53,20 @@ public class Patient {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public Date getDob() {
@@ -71,7 +87,7 @@ public class Patient {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(dob, id, name, phone);
+		return Objects.hash(dob, firstName, id, lastName, phone);
 	}
 
 	@Override
@@ -83,8 +99,10 @@ public class Patient {
 		if (getClass() != obj.getClass())
 			return false;
 		Patient other = (Patient) obj;
-		return Objects.equals(dob, other.dob) && Objects.equals(id, other.id) && Objects.equals(name, other.name)
+		return Objects.equals(dob, other.dob) && Objects.equals(firstName, other.firstName)
+				&& Objects.equals(id, other.id) && Objects.equals(lastName, other.lastName)
 				&& Objects.equals(phone, other.phone);
 	}
 
+	
 }
