@@ -1,7 +1,7 @@
 package com.example.demo.service.impl;
 
 import java.util.List;
-import java.util.Optional;
+
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -72,7 +72,7 @@ public class PatientServiceImpl implements IPatientService {
 	
 	@Override
 	public List<Patient> filtterPatientDetails(String firstName, Long phone) {
-		// TODO Auto-generated method stub
+		
           logger.info("Enter Into Save Patient Impl..!");
 		
 		logger.info("first Name::"+firstName);
