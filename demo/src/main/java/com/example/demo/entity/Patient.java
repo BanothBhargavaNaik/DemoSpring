@@ -1,7 +1,6 @@
 package com.example.demo.entity;
 
 import java.util.Date;
-import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,37 +12,32 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 
-
 @Entity
 @Table(name = "patient_info")
 public class Patient {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name= "id")
+	@Column(name = "id")
 	private Long id;
-	
+
 	@Column(name = "first_name")
 	@NotBlank(message = "Name is mandatory")
 	private String firstName;
-	
+
 	@Column(name = "last_name")
 	@NotBlank(message = "Name is mandatory")
 	private String lastName;
-	
+
 	@Column(name = "dob")
 	@Temporal(TemporalType.DATE)
 	private Date dob;
-	
-	@Override
-	public String toString() {
-		return "Patient [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", phone="
-				+ phone + "]";
-	}
 
-	@Column(name = "phone")
-	
+	@Column(name = "phone",unique = true)
 	private Long phone;
+
+	
+	
 
 	public Long getId() {
 		return id;
@@ -86,23 +80,10 @@ public class Patient {
 	}
 
 	@Override
-	public int hashCode() {
-		return Objects.hash(dob, firstName, id, lastName, phone);
+	public String toString() {
+		return "Patient [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", phone="
+				+ phone + "]";
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Patient other = (Patient) obj;
-		return Objects.equals(dob, other.dob) && Objects.equals(firstName, other.firstName)
-				&& Objects.equals(id, other.id) && Objects.equals(lastName, other.lastName)
-				&& Objects.equals(phone, other.phone);
-	}
 
-	
 }

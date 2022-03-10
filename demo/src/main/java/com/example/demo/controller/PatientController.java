@@ -18,7 +18,7 @@ import com.example.demo.exception.ValidationException;
 import com.example.demo.service.IPatientService;
 
 @RestController
-@RequestMapping("/patient-v1")
+@RequestMapping("/patient/v1")
 public class PatientController {
 
 	private final static Logger logger = LoggerFactory.getLogger(PatientController.class);
@@ -82,7 +82,7 @@ public class PatientController {
 		return re;
 	}
 
-	@GetMapping("details/{firstName}")
+	@GetMapping("/details/{firstName}")
 	public ResponseEntity<List<Patient>> patientDetailsByName(@PathVariable String firstName) {
 
 		logger.info("Enter Into Patient Controller");
@@ -95,4 +95,19 @@ public class PatientController {
 
 		return re;
 	}
+
+	@PostMapping("/featchPatient")
+	public ResponseEntity<List<Patient>> featchPatient(@RequestBody Patient patient) {
+
+		logger.info("Enter Into Patient Controller");
+
+		List<Patient> p = patientService.featchPatient(patient);
+
+		ResponseEntity<List<Patient>> re = ResponseEntity.ok().body(p);
+
+		logger.info("Exit From Patient Controller");
+
+		return re;
+	}
+
 }

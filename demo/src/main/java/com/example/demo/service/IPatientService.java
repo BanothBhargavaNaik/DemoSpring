@@ -13,10 +13,8 @@ public interface IPatientService {
 
 	public List<Patient> filtterPatientDetails(String firstName);
 	
-	public List<Patient> filtterPatientDetails(String firstName, Long phone);
 	
-	public List<Patient> filtterPatientDetails(String firstName,String lastName, Long phone);
-	
+	List<Patient> featchPatient(Patient patient);
 	
 
 	

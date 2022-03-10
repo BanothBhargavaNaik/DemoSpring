@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -46,7 +47,6 @@ public class PatientServiceImpl implements IPatientService {
 
 	@Override
 	public void multiSavePatient(List<Patient> patient) {
-		
 
 		patientRepo.saveAll(patient);
 
@@ -57,53 +57,30 @@ public class PatientServiceImpl implements IPatientService {
 	@Override
 	public List<Patient> filtterPatientDetails(String firstName) {
 		logger.info("Enter Into Save Patient Impl..!");
-		
-		logger.info("first Name::"+firstName);
-		
+
+		logger.info("first Name::" + firstName);
+
 		List<Patient> patients = getAllPatient();
-		
-		logger.info("patients::"+patients);
+
+		logger.info("patients::" + patients);
 
 		return patients.stream().filter(p -> p.getFirstName().equals(firstName)).collect(Collectors.toList());
 
 		/* return patientRepo.findByFirstName(firstName); */
 
 	}
-	
-	@Override
-	public List<Patient> filtterPatientDetails(String firstName, Long phone) {
-		
-        logger.info("Enter Into Save Patient Impl..!");
-		
-		logger.info("first Name::"+firstName);
-		
-		List<Patient> patients = getAllPatient();
-		
-		logger.info("patients::"+patients);
-
-		return patients.stream().filter(p -> (p.getFirstName().equals(firstName)) && (p.getPhone() == phone)).collect(Collectors.toList());
-	}
-
-	@Override
-	public List<Patient> filtterPatientDetails(String firstName, String lastName, Long phone) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	
 
 	/* Fetching Patient Data By Using Id */
 
 	@Override
-	public Patient getPatientById(Long id)  {
-		
+	public Patient getPatientById(Long id) {
+
 		logger.info("Enter Into Get Patient By Id Impl..!");
-		
-		Optional<Patient> pa= patientRepo.findById(id);
-		
-		if(pa.isPresent()) {
-		  return pa.get();
-		}else {
+
+		Optional<Patient> pa = patientRepo.findById(id);
+		if (pa.isPresent()) {
+			return pa.get();
+		} else {
 
 			logger.info("Validation Fail, Raising The Exception..!");
 			return null;
@@ -115,14 +92,48 @@ public class PatientServiceImpl implements IPatientService {
 
 	@Override
 	public List<Patient> getAllPatient() {
-		
+
 		logger.info("Enter Into Get Patient  Impl..!");
 
 		return patientRepo.findAll();
 	}
 
+	
 
+	@Override
+	public List<Patient> featchPatient(Patient patient) {
+		logger.info("Enter Into Save Patient Impl..!");
 
+		
+		 logger.info("patient::" + patient);
+		 
+		List<Patient> pa = getAllPatient();
 
+		logger.info("patients::" + pa);
+
+		if (Objects.nonNull(patient.getFirstName()) && !"".equalsIgnoreCase(patient.getFirstName())) {
+			
+		  pa= pa.stream().filter(p -> p.getFirstName().equalsIgnoreCase(patient.getFirstName())).collect(Collectors.toList());
+
+		}
+		if (Objects.nonNull(patient.getLastName()) && !"".equalsIgnoreCase(patient.getLastName())) {
+			
+			pa = pa.stream().filter(p -> p.getLastName().equals(patient.getLastName())).collect(Collectors.toList());
+		}
+
+		if (Objects.nonNull(patient.getPhone())) {
+			
+			pa = pa.stream().filter(p -> p.getPhone().longValue()== patient.getPhone().longValue()).collect(Collectors.toList());
+
+		}
+
+		if (Objects.nonNull(patient.getDob())) {
+			
+			pa = pa.stream().filter(p -> p.getDob()== patient.getDob()).collect(Collectors.toList());
+
+		}
+
+		return pa;
+	}
 
 }
