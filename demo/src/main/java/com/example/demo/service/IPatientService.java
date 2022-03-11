@@ -16,7 +16,11 @@ public interface IPatientService {
 	
 	List<Patient> featchPatient(Patient patient);
 	
+	
+    List<Patient> featchingAllPatient(Patient patient);
+	
 
+	
 	
 	public Patient getPatientById(Long id) ;
 	

@@ -37,7 +37,6 @@ public class Patient {
 	private Long phone;
 
 	
-	
 
 	public Long getId() {
 		return id;
