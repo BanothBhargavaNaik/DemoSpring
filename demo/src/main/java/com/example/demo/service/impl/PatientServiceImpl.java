@@ -11,47 +11,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entity.Patient;
-import com.example.demo.exception.ValidationException;
 import com.example.demo.repository.PatientRepo;
 import com.example.demo.service.IPatientService;
 
 @Service
 public class PatientServiceImpl implements IPatientService {
 
-	private final static Logger logger = LoggerFactory.getLogger(IPatientService.class);
+	private final Logger logger = LoggerFactory.getLogger(PatientServiceImpl.class);
 
 	@Autowired
 	private PatientRepo patientRepo;
-	
-	
+
 	/* Saving and updating patient data */
 
 	@Override
-	public void savePatient(Patient patient) throws ValidationException {
+	public Patient savePatient(Patient patient) {
 
-		logger.trace("Enter Into Save Patient Impl..!");
+		return patientRepo.save(patient);
 
-		Patient patient2 = patientRepo.findByFirstNameAndPhone(patient.getFirstName(), patient.getPhone());
-		if (patient2 == null || (patient2.getId() != null && (patient2.getId() == patient.getId()))) {
-
-			logger.info("Patient::" + patient2);
-			logger.info("Validation Pass , Saving The Data..!");
-
-			patientRepo.save(patient);
-		} else {
-
-			logger.info("Validation Fail, Raising The Exception..!");
-			throw new ValidationException("Patient Details Existed..!");
-		}
-		logger.info("Exited From Save Patient Impl..!");
 	}
 
 	/* This method used for Insert bulk data */
 
 	@Override
-	public void multiSavePatient(List<Patient> patient) {
+	public List<Patient> multiSavePatient(List<Patient> patient) {
 
-		patientRepo.saveAll(patient);
+		return patientRepo.saveAll(patient);
 
 	}
 
@@ -59,17 +44,10 @@ public class PatientServiceImpl implements IPatientService {
 
 	@Override
 	public List<Patient> filtterPatientDetails(String firstName) {
-		logger.info("Enter Into Save Patient Impl..!");
-
-		logger.info("first Name::" + firstName);
 
 		List<Patient> patients = getAllPatient();
 
-		logger.info("patients::" + patients);
-
 		return patients.stream().filter(p -> p.getFirstName().equals(firstName)).collect(Collectors.toList());
-
-		/* return patientRepo.findByFirstName(firstName); */
 
 	}
 
@@ -102,93 +80,43 @@ public class PatientServiceImpl implements IPatientService {
 	}
 
 	@Override
-	public List<Patient> featchPatient(Patient patient) {
-		logger.info("Enter Into Save Patient Impl..!");
-
-		logger.info("patient::" + patient);
+	public List<Patient> getData(Patient patient) {
 
 		List<Patient> pa = getAllPatient();
 
-		logger.info("patients::" + pa);
+		if (Objects.nonNull(patient.getFirstName()) && Objects.nonNull(patient.getLastName())
+				&& Objects.nonNull(patient.getPhone())) {
 
-		if (Objects.nonNull(patient.getFirstName()) && !"".equalsIgnoreCase(patient.getFirstName())) {
-
-			pa = pa.stream().filter(p -> p.getFirstName().equalsIgnoreCase(patient.getFirstName()))
+			pa = pa.stream()
+					.filter(p -> p.getFirstName().equalsIgnoreCase(patient.getFirstName())
+							&& p.getLastName().equals(patient.getLastName())
+							&& p.getDob().toString().equals(patient.getDob().toString()))
 					.collect(Collectors.toList());
 
 		}
-		if (Objects.nonNull(patient.getLastName()) && !"".equalsIgnoreCase(patient.getLastName())) {
+		
 
-			pa = pa.stream().filter(p -> p.getLastName().equals(patient.getLastName())).collect(Collectors.toList());
-		}
-
-		if (Objects.nonNull(patient.getPhone())) {
-
-			pa = pa.stream().filter(p -> p.getPhone().longValue() == patient.getPhone().longValue())
-					.collect(Collectors.toList());
-
-		}
-
-		if (Objects.nonNull(patient.getDob())) {
-
-			pa = pa.stream().filter(p -> p.getDob().toString().equals(patient.getDob().toString())).collect(Collectors.toList());
-
-		}
 
 		return pa;
 	}
 
-	
-	
-	
 	@Override
 	public List<Patient> featchingAllPatient(Patient patient) {
 
-		logger.info("Enter Into Save Patient Impl..!");
-
-		logger.info("patient::" + patient);
-
 		List<Patient> pa = getAllPatient();
 
-		List<Patient> pa1= null;
-		List<Patient> pa2= null;
-		List<Patient> pa3 = null;
-	
-		logger.info("patients::" + pa);
+		if (Objects.nonNull(patient.getFirstName()) || Objects.nonNull(patient.getLastName())
+				|| Objects.nonNull(patient.getPhone())) {
 
-		if (Objects.nonNull(patient.getFirstName()) && !"".equalsIgnoreCase(patient.getFirstName())) {
+			pa = pa.stream().filter(p -> p.getFirstName().equalsIgnoreCase(patient.getFirstName())
 
-			pa1 = pa.stream().filter(p -> p.getFirstName().equalsIgnoreCase(patient.getFirstName()))
+					|| p.getLastName().equals(patient.getLastName())
+					|| p.getPhone().longValue() == patient.getPhone().longValue()).distinct()
 					.collect(Collectors.toList());
-			logger.info("pa_firstname::" + pa1);
-			
 
 		}
-		
-		if (Objects.nonNull(patient.getLastName()) && !"".equalsIgnoreCase(patient.getLastName())) {
 
-			pa2 = pa.stream().filter(p -> p.getLastName().equals(patient.getLastName())).collect(Collectors.toList());
-			logger.info("pa_lastname::" + pa2);
-		}
-		  
-		if (Objects.nonNull(patient.getPhone())) {
-
-			pa3 = pa.stream().filter(p -> p.getPhone().longValue() == patient.getPhone().longValue())
-					.collect(Collectors.toList());
-			logger.info("pa_phone::" + pa3);
-		}
-		
-		logger.info("patient::" + pa);
-		
-		logger.info("data_type"+pa.getClass().getSimpleName());
-		
-       
-       pa3.addAll(pa2);
-       pa3.addAll(pa1);
-	
-       logger.info("patient::" + pa3);
-
-		return pa3.stream().distinct().collect(Collectors.toList());
+		return pa;
 
 	}
 

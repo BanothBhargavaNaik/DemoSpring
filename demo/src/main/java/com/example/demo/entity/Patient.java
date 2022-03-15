@@ -1,16 +1,21 @@
 package com.example.demo.entity;
 
 import java.util.Date;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotBlank;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "patient_info")
@@ -21,22 +26,35 @@ public class Patient {
 	@Column(name = "id")
 	private Long id;
 
-	@Column(name = "first_name")
-	@NotBlank(message = "Name is mandatory")
+	@Column(name = "first_name", nullable = false, unique = true)
 	private String firstName;
 
 	@Column(name = "last_name")
-	@NotBlank(message = "Name is mandatory")
 	private String lastName;
 
 	@Column(name = "dob")
 	@Temporal(TemporalType.DATE)
 	private Date dob;
 
-	@Column(name = "phone",unique = true)
+	@Column(name = "phone", nullable = false, unique = true)
 	private Long phone;
 
-	
+	@Column(name = "date_created")
+	@CreationTimestamp
+	private Date dateCreated;
+
+	@Column(name = "last_updated")
+	@UpdateTimestamp
+	private Date lastUpdated;
+
+	@OneToMany(mappedBy = "patients",cascade = CascadeType.ALL)
+	private Set<MedicalInfo> medicalInfo;
+
+	@Override
+	public String toString() {
+		return "Patient [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", phone="
+				+ phone + ", medicalInfo=" + medicalInfo + "]";
+	}
 
 	public Long getId() {
 		return id;
@@ -78,11 +96,12 @@ public class Patient {
 		this.phone = phone;
 	}
 
-	@Override
-	public String toString() {
-		return "Patient [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", phone="
-				+ phone + "]";
+	public Set<MedicalInfo> getMedicalInfo() {
+		return medicalInfo;
 	}
 
+	public void setMedicalInfo(Set<MedicalInfo> medicalInfo) {
+		this.medicalInfo = medicalInfo;
+	}
 
 }
